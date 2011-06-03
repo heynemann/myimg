@@ -4,10 +4,11 @@
 from os.path import expanduser, abspath, join, exists
 
 class Synchronizer():
-    def __init__(self, storage, folder=None):
+    def __init__(self, context, storage, folder=None):
+        self.context = context
+        self.storage = storage
         self.folder = folder
         self.__fix_folder()
-        self.storage = storage
 
     def __fix_folder(self):
         if self.folder is None:
