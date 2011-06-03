@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from os.path import expanduser, join, abspath, dirname, split
+from os.path import expanduser, join, abspath, dirname
 
 from pyvows import Vows, expect
 
@@ -72,7 +72,14 @@ class SynchronizerVows(Vows.Context):
                     expect(topic['upload']).to_length(1)
 
                 def should_have_common(self, topic):
-                    expect(split(topic['upload'][0])[-1]).to_equal('common.jpg')
+                    expect(topic['upload'][0]).to_equal('/common.jpg')
+
+            #class BecauseDifferentAndNewerThanServer(Vows.Context):
+                #def topic(self):
+                    #return Synchronizer({}, MockApi([{
+                        
+                    #}]), folder=join(files_folder, 'different_than_server', 'from')).sync()
+
 
 class MockApi(object):
     def __init__(self, to=[]):

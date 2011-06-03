@@ -59,7 +59,7 @@ class Synchronizer():
 
         for filename in local_files:
             if not filename in user_files:
-                uploads.append(filename)
+                uploads.append(filename.replace(self.folder, ''))
 
         return {
             'download': downloads,
