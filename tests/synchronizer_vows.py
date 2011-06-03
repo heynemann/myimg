@@ -13,21 +13,21 @@ class SynchronizerVows(Vows.Context):
 
     class WhenDefaultFolder(Vows.Context):
         def topic(self):
-            return Synchronizer()
+            return Synchronizer(None)
 
         def should_have_proper_pictures_folder(self, topic):
             expect(topic.folder).to_equal(my_pictures_folder)
 
     class WhenSpecifiedFolder(Vows.Context):
         def topic(self):
-            return Synchronizer(folder='/tmp')
+            return Synchronizer(None, folder='/tmp')
 
         def should_have_proper_pictures_folder(self, topic):
             expect(topic.folder).to_equal('/tmp')
 
     class WhenInvalidFolder(Vows.Context):
         def topic(self):
-            return Synchronizer(folder='/tmp/invalid')
+            return Synchronizer(None, folder='/tmp/invalid')
 
         def should_be_an_error(self, topic):
             expect(topic).to_be_an_error()
