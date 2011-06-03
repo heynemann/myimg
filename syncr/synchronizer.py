@@ -4,9 +4,9 @@
 from os.path import expanduser, abspath, join, exists
 
 class Synchronizer():
-    def __init__(self, context, storage, folder=None):
+    def __init__(self, context, api, folder=None):
         self.context = context
-        self.storage = storage
+        self.api = api
         self.folder = folder
         self.__fix_folder()
 
@@ -30,6 +30,10 @@ class Synchronizer():
         return abspath(folder)
 
     def sync(self):
-        pass
+        user_files = self.api.get_files(self.context)
+        local_files = self.api.get_local_files(self.context, self.folder)
 
-
+        return {
+            'download': [],
+            'upload': []
+        }
