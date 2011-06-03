@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from os.path import expanduser, join, abspath, dirname
+from os.path import expanduser, join, abspath, dirname, split
 
 from pyvows import Vows, expect
 
-from syncr.synchronizer import Synchronizer
+from syncr.synchronizer import Synchronizer, locate
 
 my_pictures_folder = join(expanduser('~'), 'Pictures')
 
@@ -60,9 +60,27 @@ class SynchronizerVows(Vows.Context):
             def should_have_empty_up(self, topic):
                 expect(topic['upload']).to_be_empty()
 
+        class WhenUploads(Vows.Context):
+            class BecauseNotPresentOnServer(Vows.Context):
+                def topic(self):
+                    return Synchronizer({}, MockApi([]), folder=join(files_folder, 'not_present_on_server', 'from')).sync()
+
+                def should_have_upload_collection(self, topic):
+                    expect(topic['upload']).not_to_be_empty()
+
+                def should_have_one_upload(self, topic):
+                    expect(topic['upload']).to_length(1)
+
+                def should_have_common(self, topic):
+                    expect(split(topic['upload'][0])[-1]).to_equal('common.jpg')
+
 class MockApi(object):
+    def __init__(self, to=[]):
+        self.to = to
+
     def get_files(self, context):
-        return []
+        return self.to
 
     def get_local_files(self, context, folder):
-        return []
+        return locate('(.+?)[.](jpe?g|gif|png)', matcher='regex', root=folder)
+

@@ -1,7 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
+import re
 from os.path import expanduser, abspath, join, exists
+import fnmatch
+from glob import glob
+
+def locate(pattern, matcher="fn", root=os.curdir, recursive=True):
+    root_path = os.path.abspath(root)
+
+    if recursive:
+        return_files = []
+        for path, dirs, files in os.walk(root_path):
+            if matcher == 'fn':
+                for filename in fnmatch.filter(files, pattern):
+                    return_files.append(os.path.join(path, filename))
+            if matcher == 'regex':
+                for filename in files:
+                    if re.match(pattern, filename):
+                        return_files.append(os.path.join(path, filename))
+        return return_files
+    else:
+        return glob(join(root_path, pattern))
 
 class Synchronizer():
     def __init__(self, context, api, folder=None):
@@ -33,7 +54,14 @@ class Synchronizer():
         user_files = self.api.get_files(self.context)
         local_files = self.api.get_local_files(self.context, self.folder)
 
+        downloads = []
+        uploads = []
+
+        for filename in local_files:
+            if not filename in user_files:
+                uploads.append(filename)
+
         return {
-            'download': [],
-            'upload': []
+            'download': downloads,
+            'upload': uploads
         }
