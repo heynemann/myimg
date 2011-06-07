@@ -24,6 +24,7 @@ describe('scrollend', function(){
 
     it('should not fire the end event if the offset has not been reached', function(){
         this.element.scrollTo(0, 100);
+        // dunno why need the delay, but i know we need it!
         waits(50);
         runs(function(){
             expect(this.callback).not.toHaveBeenCalled();
