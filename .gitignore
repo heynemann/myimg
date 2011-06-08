@@ -3,8 +3,5 @@
 build
 dist
 pyVows.egg-info
-<<<<<<< HEAD
 pip-requirements.txt
-=======
 .DS_Store
->>>>>>> b70cc0a0a684585ee82efd084fd1de5fcc9fe93b
