@@ -8,7 +8,7 @@
             if (shouldUpdate == null || shouldUpdate === true) this.update();
         },
         registerJson: function(url, shouldUpdate){
-            this.request = new Request.JSON({url: url});
+            this.request = new Request.JSON({url: url, method: 'get'});
             this.register(function(success, failure){
                 this.request
                     .addEvent('success', success)
