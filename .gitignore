@@ -3,4 +3,5 @@
 build
 dist
 pyVows.egg-info
+pip-requirements.txt
 .DS_Store

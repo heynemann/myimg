@@ -11,16 +11,15 @@
                 args: args
             };
             this.fireEvent(name, args);
-            this.removeEvents();
         },
-        then: function(success, fail){
-            this.success(success).fail(fail);
+        then: function(success, failure){
+            this.success(success).failure(failure);
         },
         success: function(callback){
             this.add('success', callback);
         },
-        fail: function(callback){
-            this.add('fail', callback);
+        failure: function(callback){
+            this.add('failure', callback);
         },
         isResolved: function(){
             return !!this.promiseState;
