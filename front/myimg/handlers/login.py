@@ -4,7 +4,7 @@
 import tornado.web
 import tornado.auth
 
-from thumby.handlers.base import BaseHandler
+from myimg.handlers.base import BaseHandler
 
 class ChooseLoginHandler(BaseHandler):
     def get(self):

@@ -3,7 +3,7 @@
 
 '''Redirects access to handlers'''
 
-from thumby.handlers.home import *
-from thumby.handlers.admin import *
-from thumby.handlers.login import *
-from thumby.handlers.dashboard import *
+from myimg.handlers.home import *
+from myimg.handlers.admin import *
+from myimg.handlers.login import *
+from myimg.handlers.dashboard import *

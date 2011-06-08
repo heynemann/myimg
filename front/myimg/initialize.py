@@ -19,7 +19,7 @@ def initialize(port):
 
     print "Initializing DB"
 
-    connect('thumby', port=port)
+    connect('myimg_set', port=port)
     __create_admin_users()
 
 def __create_admin_users():
@@ -44,6 +44,6 @@ def __create_admin_users():
             print "User %s was already in the DB" % name
 
 if __name__ == "__main__":
-    port = len(sys.argv) > 1 and int(sys.argv[1]) or 20000
+    port = len(sys.argv) > 1 and int(sys.argv[1]) or 27017
     initialize(port)
 

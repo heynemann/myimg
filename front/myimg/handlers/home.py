@@ -1,16 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from thumby.handlers.base import BaseHandler
-from thumby.handlers.login import GoogleLoginHandler, FacebookLoginHandler
-from thumby.models import User, UserAccount
+import asyncmongo
+
+from myimg.handlers.base import BaseHandler
+from myimg.handlers.login import GoogleLoginHandler, FacebookLoginHandler
+from myimg.models import User
 
 class MainPageHandler(BaseHandler):
 
     def get(self):
-        if (self.get_current_user()):
-            self.redirect('/dashboard')
-        self.render("home.html")
+        def on_current_user(current_user):
+            if current_user:
+                self.redirect('/dashboard')
+            self.render("home.html")
+
+        self.get_current_user(on_current_user)
 
 class RegisterHandler(BaseHandler):
 
@@ -26,18 +31,20 @@ class GoogleRegisterHandler(GoogleLoginHandler):
         last_name = self.get_cookie('lastname')
         locale = self.get_cookie('locale')
 
-        users = User.objects(email=email)
 
-        if not users:
-            user = User(email=email, name="%s %s" % (first_name, last_name), locale=locale)
-            user.slug = user.get_unique_hash()
-            user.security_key = user.get_security_key()
-            user.save()
+        def on_user(user, error):
+            def redirect_to_dashboard(*args, **kwargs):
+                self.redirect('/dashboard')
 
-            account = UserAccount(user=user)
-            account.save()
+            if not error:
+                user = dict(email=email, name="%s %s" % (first_name, last_name), locale=locale)
+                user.update({'security_key': User.get_security_key(email) })
 
-        self.redirect('/dashboard')
+                self.db.users.update({ email: email }, user, upsert=True, callback=redirect_to_dashboard)
+            else:
+                redirect_to_dashboard()
+
+        self.db.users.find_one({"email": email}, callback=on_user)
 
 class FacebookRegisterHandler(FacebookLoginHandler):
     pass
