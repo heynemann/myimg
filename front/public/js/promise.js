@@ -6,14 +6,12 @@
         Implements: Events,
         call: function(name){
             var args = slice.call(arguments, 1);
-            if (this.promiseState){
-                this.removeEvents(this.promiseState.name);
-            }
             this.promiseState = {
                 name: name,
                 args: args
             };
             this.fireEvent(name, args);
+            this.removeEvents();
         },
         then: function(success, fail){
             this.success(success).fail(fail);
@@ -24,11 +22,14 @@
         fail: function(callback){
             this.add('fail', callback);
         },
+        isResolved: function(){
+            return !!this.promiseState;
+        },
         add: function(name, callback){
-            if (this.promiseState && this.promiseState.name == name){
-                callback.apply(this, this.promiseState.args);
-            } else {
+            if (!this.promiseState){
                 this.addEvent(name, callback);
+            } else if (this.promiseState.name == name){
+                callback.apply(this, this.promiseState.args);
             }
         }
     });
