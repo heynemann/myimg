@@ -3,7 +3,7 @@
 
 import os
 import re
-from os.path import expanduser, abspath, join, exists
+from os.path import expanduser, abspath, join, exists, dirname, split
 import fnmatch
 from glob import glob
 
@@ -61,8 +61,13 @@ class Synchronizer():
 
         for filename in local_files:
             if not filename in user_files:
-                uploads.append(File.load(basefolder=self.folder, 
-                                         path=filename.replace(self.folder, '')))
+                uploads.append(File.load(path=dirname(filename).replace(self.folder, ''),
+                                         filename=split(filename)[-1]))
+
+        for userfile in user_files:
+            f = File.load_from_model(userfile)
+            if not f.full_path in local_files:
+                downloads.append(File.load_from_model(userfile))
 
         return {
             'download': downloads,

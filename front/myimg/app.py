@@ -9,13 +9,11 @@ from optparse import OptionParser
 
 import tornado.ioloop
 import tornado.web
-from mongoengine import connect
 
 from myimg.handlers import MainPageHandler, AdminDashboardHandler, \
         GoogleLoginHandler, RegisterHandler, GoogleRegisterHandler, DashboardHandler, \
-        FacebookRegisterHandler, FacebookLoginHandler
-
-from thumby.handlers import ChooseLoginHandler, LogoutHandler
+        ChooseLoginHandler, LogoutHandler
+#        FacebookRegisterHandler, FacebookLoginHandler
 
 def create_pid_file(pid_path):
     pid = os.getpid()
@@ -35,7 +33,7 @@ def main():
     parser.add_option("-p", "--port", type="int", dest="port", help="port", default=8000)
     parser.add_option("-d", "--pid", dest="pid", help="pid file", default=None)
     parser.add_option('-m', '--daemon', dest='daemon', action='store_true', default=False)
-    parser.add_option("-l", "--log", dest="log", help="log path", default='/var/logs/thumby.log')
+    parser.add_option("-l", "--log", dest="log", help="log path", default='/var/logs/myimg.log')
 
     (options, args) = parser.parse_args()
 
@@ -46,23 +44,26 @@ def main():
         "login_url": "/login",
     }
 
+    MainPageHandler.dbhost = options.dbhost
+    MainPageHandler.dbport = options.dbport
+    MainPageHandler.dbname = 'myimg_set'
+
     application = tornado.web.Application([
         (r'/', MainPageHandler),
         (r'/register/?', RegisterHandler),
         (r'/register/google/?', GoogleRegisterHandler),
-        (r'/register/facebook/?', FacebookRegisterHandler),
+        #(r'/register/facebook/?', FacebookRegisterHandler),
         (r'/admin/?', AdminDashboardHandler),
         (r'/login/?', ChooseLoginHandler),
         (r'/logout/?', LogoutHandler),
         (r'/login/google/?', GoogleLoginHandler),
-        (r'/login/google/?', FacebookLoginHandler),
+        #(r'/login/google/?', FacebookLoginHandler),
         (r'/dashboard/?', DashboardHandler),
     ], **settings)
 
+
     if options.pid:
         create_pid_file(options.pid)
-
-    connect('thumby-set', host=options.dbhost, port=options.dbport)
 
     application.listen(options.port)
 

@@ -5,25 +5,9 @@
 <h1 class="now-what">Ok, I'm registered! So what now?</h1>
 
 <p>Now you can start generating your own images with your own personal key:</p>
-<h2 class="dashboard-slug">{{ user.slug }}</h2>
+<h2 class="dashboard-slug">{{ user.name }}</h2>
 
 <p>If it's not your account, please <a href="/logout">logout</a>.</p>
-
-{% if user_account %}
-<h1 class="my-hits">My Hits</h1>
-
-<ul>
-    {% for hit in user_account.hits %}
-    <li class="hit">
-        <strong class="url">{{ hit.url }}</strong>
-        <span class="referrer">Referrer: {{ hit.referrer }}</span>
-        <span class="ip">Ip: {{ hit.ip }}</span>
-    </li>
-    {% end %}
-</ul>
-{% end %}
-
-{% end %}
 
 {% block js_specific %}
 <script type="text/javascript" charset="utf-8" src="/static/js/home.js"></script>

@@ -5,7 +5,7 @@
 
 import tornado.web
 
-from thumby.handlers.base import BaseHandler, admin_authenticated
+from myimg.handlers.base import BaseHandler, admin_authenticated
 
 class AdminDashboardHandler(BaseHandler):
     '''handler for the first page of the website administration'''
