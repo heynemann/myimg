@@ -7,8 +7,8 @@ var images = [
 %(content)s
 ];
 
-for (image in images) {
-    db.userImages.insert(images)
+for (var i=0; i < images.length; i++) {
+    db.userImages.insert(images[i]);
 }
 """
 
