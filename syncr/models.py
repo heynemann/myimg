@@ -4,20 +4,24 @@
 from os.path import join, sep
 
 class File(object):
-    def __init__(self, basefolder, path, contents=None):
-        self.path = path
-        self.basefolder = basefolder
-        if contents is None:
-            self.read()
-        else:
-            self.contents = contents
+    def __init__(self, path, filename, contents=None):
+        self.path = path.lstrip(sep)
+        self.filename = filename
+        self.contents = contents
 
-    def read(self):
-        path = join(self.basefolder, self.path.lstrip(sep))
-        self.contents = open(path, 'r').read()
+    @property
+    def full_path(self):
+        return join(self.path, self.filename.lstrip(sep))
+
+    def read(self, basedir):
+        self.contents = open(self.full_path, 'r').read()
 
     @classmethod
-    def load(cls, basefolder, path):
-        f = File(basefolder, path)
+    def load(cls, path, filename):
+        f = File(path, filename)
 
         return f
+
+    @classmethod
+    def load_from_model(cls, model):
+        return File(model['path'], model['filename'])

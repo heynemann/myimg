@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from os.path import expanduser, join, abspath, dirname
+from os.path import expanduser, join, abspath, dirname, split
 
 from pyvows import Vows, expect
 
@@ -75,8 +75,11 @@ class SynchronizerVows(Vows.Context):
                 def upload_should_be_file_object(self, topic):
                     expect(topic['upload'][0]).to_be_instance_of(File)
 
+                def should_have_empty_path(self, topic):
+                    expect(topic['upload'][0].path).to_be_empty()
+
                 def should_have_common(self, topic):
-                    expect(topic['upload'][0].path).to_equal('/common.jpg')
+                    expect(topic['upload'][0].filename).to_equal('common.jpg')
 
             #class BecauseDifferentAndNewerThanServer(Vows.Context):
                 #def topic(self):
@@ -84,13 +87,44 @@ class SynchronizerVows(Vows.Context):
                         
                     #}]), folder=join(files_folder, 'different_than_server', 'from')).sync()
 
+        class WhenDownloads(Vows.Context):
+            class BecauseNotPresentLocally(Vows.Context):
+                def topic(self):
+                    test_files_folder = join(files_folder, 'not_present_locally')
+                    return Synchronizer({}, MockApi(join(test_files_folder, 'to')), folder=join(test_files_folder, 'from')).sync()
+
+                def should_have_download_collection(self, topic):
+                    expect(topic['download']).not_to_be_empty()
+
+                def should_have_one_download(self, topic):
+                    expect(topic['download']).to_length(1)
+
+                def download_should_be_file_object(self, topic):
+                    expect(topic['download'][0]).to_be_instance_of(File)
+
+                def should_have_empty_path(self, topic):
+                    expect(topic['download'][0].path).to_be_empty()
+
+                def should_have_common(self, topic):
+                    expect(topic['download'][0].filename).to_equal('common.jpg')
 
 class MockApi(object):
-    def __init__(self, to=[]):
-        self.to = to
+    def __init__(self, server_folder=None):
+        self.server_folder = server_folder
 
     def get_files(self, context):
-        return self.to
+        if not self.server_folder:
+            return []
+
+        files = locate('(.+?)[.](jpe?g|gif|png)', matcher='regex', root=self.server_folder)
+        server_files = []
+        for f in files:
+            server_files.append({
+                'path': dirname(f).replace(self.server_folder, ''),
+                'filename': split(f)[-1]
+            })
+
+        return server_files
 
     def get_local_files(self, context, folder):
         return locate('(.+?)[.](jpe?g|gif|png)', matcher='regex', root=folder)
