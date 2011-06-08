@@ -11,7 +11,7 @@ import tornado.ioloop
 import tornado.web
 from mongoengine import connect
 
-from thumby.handlers import MainPageHandler, AdminDashboardHandler, \
+from myimg.handlers import MainPageHandler, AdminDashboardHandler, \
         GoogleLoginHandler, RegisterHandler, GoogleRegisterHandler, DashboardHandler, \
         FacebookRegisterHandler, FacebookLoginHandler
 
