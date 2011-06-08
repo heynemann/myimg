@@ -7,6 +7,8 @@ from os.path import expanduser, abspath, join, exists
 import fnmatch
 from glob import glob
 
+from syncr.models import File
+
 def locate(pattern, matcher="fn", root=os.curdir, recursive=True):
     root_path = os.path.abspath(root)
 
@@ -59,7 +61,8 @@ class Synchronizer():
 
         for filename in local_files:
             if not filename in user_files:
-                uploads.append(filename.replace(self.folder, ''))
+                uploads.append(File.load(basefolder=self.folder, 
+                                         path=filename.replace(self.folder, '')))
 
         return {
             'download': downloads,

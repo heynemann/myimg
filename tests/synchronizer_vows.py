@@ -6,6 +6,7 @@ from os.path import expanduser, join, abspath, dirname
 from pyvows import Vows, expect
 
 from syncr.synchronizer import Synchronizer, locate
+from syncr.models import File
 
 my_pictures_folder = join(expanduser('~'), 'Pictures')
 
@@ -71,8 +72,11 @@ class SynchronizerVows(Vows.Context):
                 def should_have_one_upload(self, topic):
                     expect(topic['upload']).to_length(1)
 
+                def upload_should_be_file_object(self, topic):
+                    expect(topic['upload'][0]).to_be_instance_of(File)
+
                 def should_have_common(self, topic):
-                    expect(topic['upload'][0]).to_equal('/common.jpg')
+                    expect(topic['upload'][0].path).to_equal('/common.jpg')
 
             #class BecauseDifferentAndNewerThanServer(Vows.Context):
                 #def topic(self):
