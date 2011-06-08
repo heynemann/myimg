@@ -1,0 +1,4 @@
+nose
+pycurl
+tornado
+mongoengine
