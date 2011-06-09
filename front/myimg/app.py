@@ -12,7 +12,7 @@ import tornado.web
 
 from myimg.handlers import MainPageHandler, AdminDashboardHandler, \
         GoogleLoginHandler, RegisterHandler, GoogleRegisterHandler, DashboardHandler, \
-        ChooseLoginHandler, LogoutHandler
+        ChooseLoginHandler, LogoutHandler, WallHandler
 #        FacebookRegisterHandler, FacebookLoginHandler
 
 def create_pid_file(pid_path):
@@ -59,6 +59,7 @@ def main():
         (r'/login/google/?', GoogleLoginHandler),
         #(r'/login/google/?', FacebookLoginHandler),
         (r'/dashboard/?', DashboardHandler),
+        (r'/(?P<user>[^/]+)/?', WallHandler),
     ], **settings)
 
 

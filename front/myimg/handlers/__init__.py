@@ -7,3 +7,4 @@ from myimg.handlers.home import *
 from myimg.handlers.admin import *
 from myimg.handlers.login import *
 from myimg.handlers.dashboard import *
+from myimg.handlers.wall import *
