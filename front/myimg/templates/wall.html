@@ -37,7 +37,7 @@
                     },
                     initDatasource: function(){
                         this.datasource = new DataSource();
-                        this.datasource.registerJson('../../../fixtures/images.json');
+                        this.datasource.registerJson('/static/images.json');
                     },
                     initScrollend: function(){
                         var userWall = $('user-wall');
@@ -46,7 +46,8 @@
                         });
                         this.datasource.subscribe(function(data){
                             var html = data.slice(0, 80).map(function(item){
-                                return '<li><img src="http://' + Math.ceil(Math.random() * 8) + '.thby.nl/unsafe/400x200/smart/'+ item.originalUrl +'"></li>';
+                                var randomNum = Math.ceil(Math.random() * 8)
+                                return '<li><img src="http://thby.nl/unsafe/400x200/'+ item.originalUrl +'"></li>';
                             }).join('');
                             userWall.set('html', userWall.get('html') + html);
                         });
