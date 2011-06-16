@@ -14,7 +14,7 @@
             }
             .user-wall img{
                 width: 400px;
-                height: 200px
+                height: 300px
             }
         </style>
     </head>
@@ -46,8 +46,7 @@
                         });
                         this.datasource.subscribe(function(data){
                             var html = data.slice(0, 80).map(function(item){
-                                var randomNum = Math.ceil(Math.random() * 8)
-                                return '<li><img src="http://' + randomNum + '.thby.nl/unsafe/400x200/'+ item.originalUrl +'"></li>';
+                                return '<li><img src="http://thby.nl/unsafe/400x300/smart/'+ item.originalUrl +'"></li>';
                             }).join('');
                             userWall.set('html', userWall.get('html') + html);
                         });
