@@ -13,8 +13,8 @@
                 float: left;
             }
             .user-wall img{
-                width: 400px;
-                height: 300px
+                width: 350px;
+                height: 250px
             }
         </style>
     </head>
@@ -46,7 +46,7 @@
                         });
                         this.datasource.subscribe(function(data){
                             var html = data.slice(0, 80).map(function(item){
-                                return '<li><img src="http://thby.nl/unsafe/400x300/smart/'+ item.originalUrl +'"></li>';
+                                return '<li><img src="http://thby.nl/unsafe/350x250/smart/'+ item.originalUrl +'"></li>';
                             }).join('');
                             userWall.set('html', userWall.get('html') + html);
                         });
