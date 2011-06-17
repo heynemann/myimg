@@ -7,8 +7,10 @@ import os
 from os.path import dirname, join, exists
 from optparse import OptionParser
 
+import asyncmongo
 import tornado.ioloop
 import tornado.web
+from pymongo import Connection
 
 from myimg.handlers import MainPageHandler, AdminDashboardHandler, \
         GoogleLoginHandler, RegisterHandler, GoogleRegisterHandler, DashboardHandler, \
@@ -37,19 +39,28 @@ def main():
 
     (options, args) = parser.parse_args()
 
+    dbname = 'myimg_set'
+
     settings = {
         'template_path': join(dirname(__file__), "templates"),
         "static_path": join(dirname(__file__), "static"),
         "cookie_secret": "TVktVkVSWS1TRUNVUkUtVEhVTUJZLUtFWQ==",
-        "login_url": "/login",
+        "login_url": "/login"
     }
 
-    MainPageHandler.dbhost = options.dbhost
-    MainPageHandler.dbport = options.dbport
-    MainPageHandler.dbname = 'myimg_set'
+    database = {
+        'db': asyncmongo.Client(pool_id='myimg',
+                                host=options.dbhost,
+                                port=options.dbport,
+                                maxcached=10,
+                                maxconnections=50,
+                                dbname=dbname),
+        'sync_db': Connection(host=options.dbhost,
+                              port=options.dbport)[dbname]
+    }
 
     application = tornado.web.Application([
-        (r'/', MainPageHandler),
+        (r'/', MainPageHandler, database),
         (r'/register/?', RegisterHandler),
         (r'/register/google/?', GoogleRegisterHandler),
         #(r'/register/facebook/?', FacebookRegisterHandler),

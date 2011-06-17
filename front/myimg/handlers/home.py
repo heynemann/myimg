@@ -10,12 +10,12 @@ from myimg.models import User
 class MainPageHandler(BaseHandler):
 
     def get(self):
-        def on_current_user(current_user):
-            if current_user:
-                self.redirect('/dashboard')
-            self.render("home.html")
+        user = self.get_current_user()
 
-        self.get_current_user(on_current_user)
+        if user:
+            self.redirect('/dashboard')
+
+        self.render("home.html")
 
 class RegisterHandler(BaseHandler):
 

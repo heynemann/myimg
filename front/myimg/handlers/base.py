@@ -5,52 +5,23 @@ import functools
 import urllib
 import urlparse
 
-from pymongo import Connection
-import asyncmongo
 import tornado.web
 
 from myimg.models import User
 
 class BaseHandler(tornado.web.RequestHandler):
-    pass
 
-    #@property
-    #def db(self):
-        #if not hasattr(self, '_db'):
-            #self._db = asyncmongo.Client(pool_id='myimg',
-                                         #host=self.dbhost,
-                                         #port=self.dbport,
-                                         #maxcached=10,
-                                         #maxconnections=50,
-                                         #dbname=self.dbname)
-        #return self._db
+    def initialize(self, db=None, sync_db=None):
+        self.db = db
+        self.sync_db = sync_db
 
-    #@property
-    #def block_db(self):
-        #if not hasattr(self, '_block_db'):
-            #self._block_db = Connection(host=self.dbhost,
-                                        #port=self.dbport)[self.dbname]
-        #return self._block_db
+    def get_current_user(self, callback=None):
+        email = self.get_cookie('user', None)
 
-    #def get_current_user(self, callback=None):
-        #email = self.get_cookie('user', None)
+        if not email:
+            return None
 
-        #if not email:
-            #if callback:
-                #callback(None)
-            #else:
-                #return None
-
-        #def on_return_current_user(response, error=None):
-            #if not error:
-                #callback(response)
-            #callback(None)
-
-        #if callback:
-            #self.db.users.find_one({ 'email': email }, callback=on_return_current_user)
-        #else:
-            #user = self.block_db.users.find_one({ 'email': email })
-            #on_return_current_user(user)
+        return self.sync_db.users.find_one({ 'email': email })
 
 def admin_authenticated(method):
     """Decorate methods with this to require that the user be logged in."""
